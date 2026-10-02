@@ -53,7 +53,7 @@ void loop() {
     bool isRainingNow = (rainSensorVal < 500);
     unsigned long currentTime = millis();
     if (currentTime - lastSampleTime >= SAMPLE_INTERVAL) {
-        currentPressure = bme.readPressure() / 100.0F; // Pa to hPa
+        currentPressure = bme.readPressure() / 100.0F; 
         currentHumidity = bme.readHumidity();
         deltaPressure = currentPressure - previousPressure;
         previousPressure = currentPressure;
@@ -69,15 +69,10 @@ void loop() {
         digitalWrite(LED_ALERT_PIN, HIGH);
     } 
     else if (rainPredicted) {
-        digitalWrite(BUZZER_PIN, LOW);   // Keep buzzer quiet to prevent false-alarm panic
-        digitalWrite(LED_ALERT_PIN, HIGH); // Light up warning LED: storm incoming!
-    } 
-    else {
-        // Normal, clear weather
+        digitalWrite(BUZZER_PIN, LOW);   
+        digitalWrite(LED_ALERT_PIN, HIGH); 
         digitalWrite(BUZZER_PIN, LOW);
         digitalWrite(LED_ALERT_PIN, LOW);
     }
-
-    // Small 100ms pause to stabilize the loop without introducing noticeable lag
     delay(100);
 }
