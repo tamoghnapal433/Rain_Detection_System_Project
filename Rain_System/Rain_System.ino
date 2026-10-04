@@ -2,7 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #include <Servo.h>
-Servo rainShield;
+Servo shieldServo;
 const int SERVO_PIN = 9;
 const int RAIN_SENSOR_PIN = A0;
 const int BUZZER_PIN= 8;
@@ -31,6 +31,7 @@ bool predictRain(float humidity, float deltaP) {
     }
     void setup() {
     Serial.begin(9600);
+    Serial.println("----- Rain detection system is ready------");
     while (!Serial);
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_ALERT_PIN, OUTPUT);
@@ -60,7 +61,7 @@ void loop() {
     if (currentTime - lastSampleTime >= SAMPLE_INTERVAL) {
         currentPressure = bme.readPressure() / 100.0F; 
         currentHumidity = bme.readHumidity();
-        deltaPressure = currentPressure -;
+        deltaPressure = currentPressure - previousPressure;
         previousPressure = currentPressure;
         lastSampleTime = currentTime;
         Serial.println("--- [1-Hour Weather Update] ---");
@@ -86,3 +87,4 @@ void loop() {
     digitalWrite(LED_ALERT_PIN, LOW);
     shieldServo.write(0); 
   }
+}
