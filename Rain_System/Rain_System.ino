@@ -3,7 +3,7 @@
 #include <Adafruit_BME280.h>
 const int RAIN_SENSOR_PIN = A0;
 const int BUZZER_PIN= 8;
-const int LED_ALERT_PIN = 7;
+const int LED_ALERT_PIN = 13;
 Adafruit_BME280 bme;
 unsigned long lastSampleTime = 0;
 const unsigned long SAMPLE_INTERVAL = 30000UL;
@@ -55,7 +55,7 @@ void loop() {
     if (currentTime - lastSampleTime >= SAMPLE_INTERVAL) {
         currentPressure = bme.readPressure() / 100.0F; 
         currentHumidity = bme.readHumidity();
-        deltaPressure = currentPressure - previousPressure;
+        deltaPressure = currentPressure -;
         previousPressure = currentPressure;
         lastSampleTime = currentTime;
         Serial.println("--- [1-Hour Weather Update] ---");
