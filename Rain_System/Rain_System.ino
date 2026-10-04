@@ -1,6 +1,9 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
+#include <Servo.h>
+Servo rainShield;
+const int SERVO_PIN = 9;
 const int RAIN_SENSOR_PIN = A0;
 const int BUZZER_PIN= 8;
 const int LED_ALERT_PIN = 13;
@@ -31,6 +34,8 @@ bool predictRain(float humidity, float deltaP) {
     while (!Serial);
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_ALERT_PIN, OUTPUT);
+    shieldServo.attach(SERVO_PIN);
+  shieldServo.write(0); 
     pinMode(RAIN_SENSOR_PIN, INPUT);
     digitalWrite(BUZZER_PIN, LOW);
     digitalWrite(LED_ALERT_PIN, LOW);
@@ -65,14 +70,19 @@ void loop() {
     }
     bool rainPredicted = predictRain(currentHumidity, deltaPressure);
     if (isRainingNow) {
-        digitalWrite(BUZZER_PIN, HIGH);
-        digitalWrite(LED_ALERT_PIN, HIGH);
-    } 
-    else if (rainPredicted) {
-        digitalWrite(BUZZER_PIN, LOW);   
-        digitalWrite(LED_ALERT_PIN, HIGH); 
-        digitalWrite(BUZZER_PIN, LOW);
-        digitalWrite(LED_ALERT_PIN, LOW);
-    }
+    digitalWrite(BUZZER_PIN, HIGH);
+    digitalWrite(LED_ALERT_PIN, HIGH);
+    shieldServo.write(90); 
+  }
+  else if (rainPredicted) {
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(LED_ALERT_PIN, HIGH);
     delay(100);
-}
+    digitalWrite(LED_ALERT_PIN, LOW);
+    shieldServo.write(0); 
+  }
+  else {
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(LED_ALERT_PIN, LOW);
+    shieldServo.write(0); 
+  }
